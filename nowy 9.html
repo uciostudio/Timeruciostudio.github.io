@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wyświetlacz czasu</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="czas"></h1>
+
+    <script>
+        function pobierzCzas() {
+            fetch('http://worldtimeapi.org/api/ip')
+                .then(response => response.json())
+                .then(data => {
+                    var czas = new Date(data.utc_datetime);
+                    var godzina = czas.getHours();
+                    var minuta = czas.getMinutes();
+                    var sekunda = czas.getSeconds();
+
+                    minuta = dodajZero(minuta);
+                    sekunda = dodajZero(sekunda);
+
+                    document.getElementById('czas').innerHTML = godzina + ':' + minuta + ':' + sekunda;
+                })
+                .catch(error => console.error('Błąd pobierania czasu:', error));
+
+            setTimeout(pobierzCzas, 1000);
+        }
+
+        function dodajZero(i) {
+            if (i < 10) {
+                i = '0' + i;
+            }
+            return i;
+        }
+
+        window.onload = pobierzCzas;
+    </script>
+</body>
+</html>
